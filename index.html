@@ -2,51 +2,156 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Stickerman Premium</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        :root {
+            --bg-grad-start: #1a1a2e;
+            --bg-grad-end: #16213e;
+            --text-color: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: rgba(0, 0, 0, 0.2);
+            --btn-bg: rgba(255, 255, 255, 0.15);
+            --btn-hover: rgba(255, 255, 255, 0.25);
+            --accent: #e94560;
+        }
+
+        body.light-theme {
+            --bg-grad-start: #e0eafc;
+            --bg-grad-end: #cfdef3;
+            --text-color: #1a1a2e;
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-shadow: rgba(0, 0, 0, 0.1);
+            --btn-bg: rgba(255, 255, 255, 0.6);
+            --btn-hover: rgba(255, 255, 255, 0.8);
+            --accent: #0f3460;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000000);
+            background: linear-gradient(135deg, var(--bg-grad-start), var(--bg-grad-end));
+            color: var(--text-color);
             margin: 0; padding: 20px;
+            min-height: 100vh;
             display: flex; flex-direction: column; align-items: center;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
         }
-        h1 { font-size: 24px; margin-bottom: 10px; }
-        .card {
-            background: var(--tg-theme-secondary-bg-color, #f0f0f0);
-            border-radius: 15px; padding: 20px; width: 100%;
-            text-align: center; margin-bottom: 20px; box-sizing: border-box;
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 50%;
+            width: 40px; height: 40px;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 4px 15px var(--glass-shadow);
+            transition: transform 0.2s;
         }
+        .theme-toggle:active { transform: scale(0.9); }
+
+        h1 {
+            font-size: 26px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 800;
+            text-shadow: 0 2px 10px var(--glass-shadow);
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px var(--glass-shadow);
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .glass-card p { margin: 5px 0; font-size: 15px; line-height: 1.4; }
+        .price { font-size: 24px; font-weight: bold; color: var(--accent); margin: 10px 0; }
+
         .btn {
-            background-color: var(--tg-theme-button-color, #2481cc);
-            color: var(--tg-theme-button-text-color, #ffffff);
-            border: none; border-radius: 10px; padding: 15px 20px;
-            font-size: 16px; font-weight: bold; width: 100%;
-            margin-top: 10px; cursor: pointer;
+            background: var(--btn-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            border-radius: 15px;
+            padding: 16px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 15px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            transition: all 0.2s ease;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+            box-sizing: border-box;
         }
-        .btn:active { opacity: 0.8; }
+        .btn:active { transform: scale(0.97); background: var(--btn-hover); }
+        
+        .stars { color: #f1c40f; text-shadow: 0 0 5px rgba(241, 196, 15, 0.5); }
     </style>
 </head>
 <body>
-    <h1>⭐ Панель управления</h1>
+    <div class="theme-toggle" onclick="toggleTheme()">🌙</div>
     
-    <div class="card">
-        <p>Здесь вы можете оплатить доступ к премиум-стикерам.</p>
-        <p style="font-size: 12px; color: gray;">Статус доступа проверяется в чате с ботом.</p>
+    <h1>Stickerman Premium</h1>
+    
+    <div class="glass-card">
+        <p>Доступ к базе премиум-стикеров</p>
+        <div class="price">1 <span class="stars">⭐</span> / 30 дней</div>
+        <button class="btn" onclick="buy('buy_30d')">Купить на 30 дней</button>
     </div>
 
-    <button class="btn" onclick="buyPremium()">Купить за 1 звезду (30 дней)</button>
+    <div class="glass-card" style="border-color: var(--accent);">
+        <p>Максимальная выгода. Навсегда.</p>
+        <div class="price">12 <span class="stars">⭐</span> / навсегда</div>
+        <button class="btn" style="background: var(--accent); color: white; border: none;" onclick="buy('buy_lifetime')">Купить навсегда</button>
+    </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Разворачиваем на весь экран
+        tg.expand();
+        
+        // Инициализация темы
+        let isLight = false;
+        if (tg.colorScheme === 'light') {
+            toggleTheme();
+        }
 
-        function buyPremium() {
-            // Отправляем данные прямо в бота
-            tg.sendData(JSON.stringify({ action: "buy_30d" }));
-            tg.close(); // Закрываем приложение
+        function toggleTheme() {
+            isLight = !isLight;
+            if (isLight) {
+                document.body.classList.add('light-theme');
+                document.querySelector('.theme-toggle').innerText = '☀️';
+                tg.setHeaderColor('#e0eafc');
+            } else {
+                document.body.classList.remove('light-theme');
+                document.querySelector('.theme-toggle').innerText = '🌙';
+                tg.setHeaderColor('#1a1a2e');
+            }
+        }
+
+        function buy(actionType) {
+            // Отправляем данные в бота (какую кнопку нажали)
+            tg.sendData(JSON.stringify({ action: actionType }));
+            tg.close();
         }
     </script>
 </body>
