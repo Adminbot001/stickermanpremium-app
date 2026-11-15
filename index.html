@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stickerman Premium</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        h1 { font-size: 24px; margin-bottom: 10px; }
+        .card {
+            background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+            border-radius: 15px; padding: 20px; width: 100%;
+            text-align: center; margin-bottom: 20px; box-sizing: border-box;
+        }
+        .btn {
+            background-color: var(--tg-theme-button-color, #2481cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none; border-radius: 10px; padding: 15px 20px;
+            font-size: 16px; font-weight: bold; width: 100%;
+            margin-top: 10px; cursor: pointer;
+        }
+        .btn:active { opacity: 0.8; }
+    </style>
+</head>
+<body>
+    <h1>⭐ Панель управления</h1>
+    
+    <div class="card">
+        <p>Здесь вы можете оплатить доступ к премиум-стикерам.</p>
+        <p style="font-size: 12px; color: gray;">Статус доступа проверяется в чате с ботом.</p>
+    </div>
+
+    <button class="btn" onclick="buyPremium()">Купить за 1 звезду (30 дней)</button>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Разворачиваем на весь экран
+
+        function buyPremium() {
+            // Отправляем данные прямо в бота
+            tg.sendData(JSON.stringify({ action: "buy_30d" }));
+            tg.close(); // Закрываем приложение
+        }
+    </script>
+</body>
+</html>
